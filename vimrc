@@ -30,6 +30,25 @@ set noswapfile
 au BufReadPost * if line("'\"") > 0|if line("'\"") <= line("$")|exe("norm '\"")|else|exe "norm $"|endif|endif
 set tags=./.tags;,.tags
 
+""""""""""""""zhushi
+autocmd FileType c,cpp,java,scala let b:comment_leader = '//'
+autocmd FileType sh,ruby,python,perl   let b:comment_leader = '#'
+autocmd FileType conf,fstab       let b:comment_leader = '#'
+autocmd FileType tex              let b:comment_leader = '%'
+autocmd FileType mail             let b:comment_leader = '>'
+autocmd FileType vim              let b:comment_leader = '"'
+autocmd FileType nasm             let b:comment_leader = ';'
+ 
+function! CommentLine()
+    execute ':silent! s/^\(.*\)/' . b:comment_leader . ' \1/g'
+endfunction
+ 
+function! UncommentLine()
+    execute ':silent! s/^' . b:comment_leader . ' //g'
+endfunction
+ 
+map <silent> <leader>cc :call CommentLine()<CR>
+map <silent> <leader>cu :call UncommentLine()<CR>
 
 """""""""""""""""""
 "tab 配置
@@ -223,15 +242,23 @@ let g:templates_directory = '~/.vim/templates'
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "              auto load modified
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-autocmd BufWrite,BufWritePre,FileWritePre  *.pl    ks|call LastModified()|'s
+" autocmd BufWrite,BufWritePre,FileWritePre  *.pl    ks|call LastModified()|'s
+" 
+" func LastModified()
+" 	if line("$") > 20
+" 		let l = 20
+" 	else 
+" 		let l = line("$")
+" 	endif
+" 	exe "1,".l."g/Last Modified  : /s/Last Modified  : .*/Last Modified  :".
+" 			\strftime(" %Y-%m-%d %H:%M" ) . "/e"
+" endfunc
+autocmd FileWritePre,BufWritePre,BufWrite *.v,*.vp,*pl,[M|m]ake* ks|call DateInsert() |'s
 
-func LastModified()
-	if line("$") > 20
-		let l = 20
-	else 
-		let l = line("$")
-	endif
-	exe "1,".l."g/Last Modified  : /s/Last Modified  : .*/Last Modified  :".
-			\strftime(" %Y-%m-%d %H:%M" ) . "/e"
-endfunc
-
+function DateInsert()
+  call cursor(20,1)
+  if search('Last Modified') != 0
+    let line = line(".")
+    exe "1,".line."g/Last Modified  : /s/Last Modified  :.*/Last Modified  : ".strftime("%Y-%m-%d %H:%M")
+  endif
+endfunction
