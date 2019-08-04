@@ -19,6 +19,7 @@ set number
 set ruler
 set showcmd
 set relativenumber
+set nowrapscan
 augroup relativenumber
     auto!
     autocmd InsertLeave * : set relativenumber
