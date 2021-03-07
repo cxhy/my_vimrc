@@ -7,6 +7,10 @@ filetype on
 filetype indent plugin on
 autocmd FileType html setlocal et sta sw=2 sts=2 
 autocmd FileType python setlocal et sta sw=4 sts=4 ts=2
+set encoding=utf-8
+set termencoding=utf-8
+set fileencodings=ucs-bom,utf-8,cp936,gb18030,big5,euc-jp,euc-kr
+set fileencoding=utf-8
 set ts=2
 set sw=2
 set expandtab
@@ -27,6 +31,8 @@ augroup relativenumber
 augroup END
 set nobackup     
 set noswapfile
+
+au! BufNewFile,BufRead *.vp  setfiletype verilog
 
 au BufReadPost * if line("'\"") > 0|if line("'\"") <= line("$")|exe("norm '\"")|else|exe "norm $"|endif|endif
 set tags=./.tags;,.tags
@@ -182,6 +188,10 @@ Plug 'aperezdc/vim-template'
 
 Plug 'jiangmiao/auto-pairs'
 
+Plug 'honza/vim-snippets'
+
+Plug 'SirVer/ultisnips'
+
 " Initialize plugin system
 call plug#end()
 
@@ -263,3 +273,9 @@ function DateInsert()
     exe "1,".line."g/Last Modified  : /s/Last Modified  :.*/Last Modified  : ".strftime("%Y-%m-%d %H:%M")
   endif
 endfunction
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"vim-tempele and ultisnips
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
