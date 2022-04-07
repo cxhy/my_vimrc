@@ -37,6 +37,19 @@ au! BufNewFile,BufRead *.vp  setfiletype verilog
 au BufReadPost * if line("'\"") > 0|if line("'\"") <= line("$")|exe("norm '\"")|else|exe "norm $"|endif|endif
 set tags=./.tags;,.tags
 
+function! StarPositionSave()
+  let g:star_position_cursor = getpos('.')
+  normal! H
+  let g:star_position_top = getpos('.')
+  call setpos('.', g:star_position_cursor)
+endfunction
+function! StarPositionRestore()
+  call setpos('.', g:star_position_top)
+  normal! zt
+  call setpos('.', g:star_position_cursor)
+endfunction
+nnoremap <silent> * :call StarPositionSave()<CR>*:call StarPositionRestore()<CR>
+
 """"""""""""""zhushi
 autocmd FileType c,cpp,java,scala let b:comment_leader = '//'
 autocmd FileType sh,ruby,python,perl   let b:comment_leader = '#'
