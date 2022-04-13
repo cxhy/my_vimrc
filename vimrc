@@ -69,7 +69,7 @@ endfunction
  
 map <silent> <leader>cc :call CommentLine()<CR>
 map <silent> <leader>cu :call UncommentLine()<CR>
-
+vnoremap // y/<c-r>"<cr>
 """""""""""""""""""
 "tab 配置
 noremap <silent><tab>m :tabnew<cr>
