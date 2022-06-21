@@ -277,17 +277,27 @@ let g:templates_directory = '~/.vim/templates'
 " 	exe "1,".l."g/Last Modified  : /s/Last Modified  : .*/Last Modified  :".
 " 			\strftime(" %Y-%m-%d %H:%M" ) . "/e"
 " endfunc
-autocmd FileWritePre,BufWritePre,BufWrite *.v,*.vp,*pl,[M|m]ake* ks|call DateInsert() |'s
+"autocmd FileWritePre,BufWritePre,BufWrite *.v,*.vp,*pl,[M|m]ake* ks|call DateInsert() |'s
 
-function DateInsert()
-  call cursor(20,1)
-  if search('Last Modified') != 0
-    let line = line(".")
-    exe "1,".line."g/Last Modified  : /s/Last Modified  :.*/Last Modified  : ".strftime("%Y-%m-%d %H:%M")
-  endif
+"function DateInsert()
+"  call cursor(20,1)
+"  if search('Last Modified') != 0
+"    let line = line(".")
+"    exe "1,".line."g/Last Modified  : /s/Last Modified  :.*/Last Modified  : ".strftime("%Y-%m-%d %H:%M")
+"  endif
+"endfunction
+
+function! s:UpdateFileTemplate()
+    let l:exec_line = '1,' . min([line('$'), 10])
+    let l:modify_regex = '(Last Modified: )@<=([0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})'
+    let l:eval_func = '\=eval("strftime(\"%Y-%m-%d %H:%M:%S\")")'
+    silent! normal! mm
+    silent! execute l:exec_line . 's/\v\C' . l:modify_regex . '/' . l:eval_func . '/'
+    silent! normal! `m
+    silent! execute 'delmarks m'
+    "silent! normal! zz
 endfunction
-
-
+autocmd BufWritePre *.h,*.c,*.v,*.sv,*.vh,*.svh call s:UpdateFileTemplate()
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "vim-tempele and ultisnips
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
