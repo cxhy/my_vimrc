@@ -51,24 +51,15 @@ endfunction
 nnoremap <silent> * :call StarPositionSave()<CR>*:call StarPositionRestore()<CR>
 
 """"""""""""""zhushi
-autocmd FileType c,cpp,java,scala let b:comment_leader = '//'
-autocmd FileType sh,ruby,python,perl   let b:comment_leader = '#'
-autocmd FileType conf,fstab       let b:comment_leader = '#'
-autocmd FileType tex              let b:comment_leader = '%'
-autocmd FileType mail             let b:comment_leader = '>'
-autocmd FileType vim              let b:comment_leader = '"'
-autocmd FileType nasm             let b:comment_leader = ';'
- 
-function! CommentLine()
-    execute ':silent! s/^\(.*\)/' . b:comment_leader . ' \1/g'
-endfunction
- 
-function! UncommentLine()
-    execute ':silent! s/^' . b:comment_leader . ' //g'
-endfunction
- 
-map <silent> <leader>cc :call CommentLine()<CR>
-map <silent> <leader>cu :call UncommentLine()<CR>
+autocmd FileType c,cpp,java,scala，verilog,systemverilog let b:comment_leader = '// '
+autocmd FileType sh,ruby,python   let b:comment_leader = '# '
+autocmd FileType conf,fstab       let b:comment_leader = '# '
+autocmd FileType tex              let b:comment_leader = '% '
+autocmd FileType mail             let b:comment_leader = '> '
+autocmd FileType vim              let b:comment_leader = '" '
+noremap <silent> ,cc :<C-B>silent <C-E>s/^/<C-R>=escape(b:comment_leader,'\/')<CR>/<CR>:nohlsearch<CR>
+noremap <silent> ,cu :<C-B>silent <C-E>s/^\V<C-R>=escape(b:comment_leader,'\/')<CR>//e<CR>:nohlsearch<CR>
+
 vnoremap // y/<c-r>"<cr>
 """""""""""""""""""
 "tab 配置
@@ -222,8 +213,6 @@ xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
 
 
-
-
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "              Leaderf    
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -266,27 +255,6 @@ let g:templates_directory = '~/.vim/templates'
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "              auto load modified
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" autocmd BufWrite,BufWritePre,FileWritePre  *.pl    ks|call LastModified()|'s
-" 
-" func LastModified()
-" 	if line("$") > 20
-" 		let l = 20
-" 	else 
-" 		let l = line("$")
-" 	endif
-" 	exe "1,".l."g/Last Modified  : /s/Last Modified  : .*/Last Modified  :".
-" 			\strftime(" %Y-%m-%d %H:%M" ) . "/e"
-" endfunc
-"autocmd FileWritePre,BufWritePre,BufWrite *.v,*.vp,*pl,[M|m]ake* ks|call DateInsert() |'s
-
-"function DateInsert()
-"  call cursor(20,1)
-"  if search('Last Modified') != 0
-"    let line = line(".")
-"    exe "1,".line."g/Last Modified  : /s/Last Modified  :.*/Last Modified  : ".strftime("%Y-%m-%d %H:%M")
-"  endif
-"endfunction
-
 function! s:UpdateFileTemplate()
     let l:exec_line = '1,' . min([line('$'), 10])
     let l:modify_regex = '(Last Modified: )@<=([0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})'
