@@ -270,3 +270,19 @@ autocmd BufWritePre *.h,*.c,*.v,*.sv,*.vh,*.svh call s:UpdateFileTemplate()
 "vim-tempele and ultisnips
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"backup
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set backup
+function Bkdir()
+    let $BKODIR=expand("$HOME/.vim/backup")
+    let $RUNTIMEPATH=expand("%:p:h")
+    let $BKDIR=$BKODIR.$RUNTIMEPATH
+    if !isdirectory(expand("$BKDIR"))
+        call mkdir(expand("$BKDIR"),"p",0750)
+    endif
+endfunction
+au BufWrite * call Bkdir()
+autocmd BufWritePre * let &bex = '_'.strftime("%Y%m%d_%H_%M")
+let &backupdir=expand("$HOME/.vim/backup").expand("%:p:h")
+
