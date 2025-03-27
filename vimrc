@@ -256,16 +256,33 @@ let g:templates_directory = '~/.vim/templates'
 "              auto load modified
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function! s:UpdateFileTemplate()
-    let l:exec_line = '1,' . min([line('$'), 10])
-    let l:modify_regex = '(Last Modified: )@<=([0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})'
-    let l:eval_func = '\=eval("strftime(\"%Y-%m-%d %H:%M:%S\")")'
-    silent! normal! mm
-    silent! execute l:exec_line . 's/\v\C' . l:modify_regex . '/' . l:eval_func . '/'
-    silent! normal! `m
-    silent! execute 'delmarks m'
-    "silent! normal! zz
+    let l:save_view = winsaveview()
+    let l:save_cursor = getpos('.')
+    let l:save_search = getreg('/')
+
+    let l:exec_range = '1,' . min([line('$'), 10])
+    let l:modify_regex = '\v\C(Last Modified: )\zs\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}'
+
+    silent! keepjumps execute l:exec_range . 's/' . l:modify_regex . '/\=strftime("%Y-%m-%d %H:%M:%S")/e'
+
+    call winrestview(l:save_view)
+    call setpos('.', l:save_cursor)
+    call setreg('/', l:save_search)
 endfunction
+
 autocmd BufWritePre *.h,*.c,*.v,*.sv,*.vh,*.svh call s:UpdateFileTemplate()
+
+"function! s:UpdateFileTemplate()
+"    let l:exec_line = '1,' . min([line('$'), 10])
+"    let l:modify_regex = '(Last Modified: )@<=([0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})'
+"    let l:eval_func = '\=eval("strftime(\"%Y-%m-%d %H:%M:%S\")")'
+"    silent! normal! mm
+"    silent! execute l:exec_line . 's/\v\C' . l:modify_regex . '/' . l:eval_func . '/'
+"    silent! normal! `m
+"    silent! execute 'delmarks m'
+"    "silent! normal! zz
+"endfunction
+"autocmd BufWritePre *.h,*.c,*.v,*.sv,*.vh,*.svh call s:UpdateFileTemplate()
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "vim-tempele and ultisnips
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
