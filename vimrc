@@ -214,6 +214,19 @@ set background=dark
 xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"              vim-surround
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+xmap " S"
+xmap ' S'
+xmap ( S(
+xmap ) S)
+xmap [ S[
+xmap ] S]
+xmap { S{
+xmap } S}
+xmap ` S`
+
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "              Leaderf    
