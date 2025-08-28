@@ -196,6 +196,8 @@ Plug 'honza/vim-snippets'
 
 Plug 'SirVer/ultisnips'
 
+Plug 'tpope/vim-surround'
+
 " Initialize plugin system
 call plug#end()
 
