@@ -1,0 +1,19 @@
+[core]
+	pager = less -RFX
+	excludesfile = ~/.gitignore_global
+
+[alias]
+  co = checkout
+  ss = status
+  sm = submodule
+  cm = commit -m
+  br = branch
+  ls = log --stat
+	st = status -sb
+	df = diff --word-diff=color
+	lg = log --graph --decorate --pretty=format:'%C(yellow)%h%C(reset) %C(blue)%an%C(reset) %C(auto)%d%C(reset) %C(green)%s%C(reset) %C(red)(%cr)%C(reset)' --abbrev-commit
+	graph = log --graph --all --decorate --oneline 
+  remote-info = !echo "Remote URL:" && git remote -v
+  branch-info = !echo "Current Branch:" && git rev-parse --abbrev-ref HEAD
+  commit-info = !echo "Last Commit:" && git log -1 --pretty=format:'%C(yellow)%h%C(reset) %C(blue)%an%C(reset) %C(auto)%d%C(reset) %C(green)%s%C(reset) %C(red)(%cr)%C(reset)' 
+  info = !git remote-info && echo && git branch-info && echo && git commit-info
