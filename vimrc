@@ -231,25 +231,36 @@ xmap ` S`
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "              Leaderf    
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:Lf_WorkingDirectoryMode = 'A'
+let g:Lf_RootMarkers = ['.git', '.svn', '.hg', 'package.json', 'pom.xml']
+let g:Lf_WindowPosition = 'popup'
 let g:Lf_ShowRelativePath = 0
 let g:Lf_HideHelp = 1
-let g:Lf_PreviewResult = {'Function':0, 'Colorscheme':1}
-let g:Lf_RootMarkers = ['.git']
-let g:Lf_WorkingDirectoryMode = 'Ac'
-
-let g:Lf_NormalMap = {
-	\ "File":   [["<ESC>", ':exec g:Lf_py "fileExplManager.quit()"<CR>']],
-	\ "Buffer": [["<ESC>", ':exec g:Lf_py "bufExplManager.quit()"<CR>']],
-	\ "Mru":    [["<ESC>", ':exec g:Lf_py "mruExplManager.quit()"<CR>']],
-	\ "Tag":    [["<ESC>", ':exec g:Lf_py "tagExplManager.quit()"<CR>']],
-	\ "Function":    [["<ESC>", ':exec g:Lf_py "functionExplManager.quit()"<CR>']],
-	\ "Colorscheme":    [["<ESC>", ':exec g:Lf_py "colorschemeExplManager.quit()"<CR>']],
-	\ }
-
+let g:Lf_PreviewResult = {'Function': 0, 'Colorscheme': 1, 'File': 1, 'Buffer': 1}
+let g:Lf_RememberLastSearch = 0 
+let g:Lf_UseVersionControlTool = 1
 let g:Lf_WildIgnore = {
-        \ 'dir': ['.svn','.git','.hg'],
-        \ 'file': ['*.sw?','~$*','*.bak','*.exe','*.o','*.so','*.py[co]']
-        \}
+    \ 'dir': ['.git', '.svn', 'node_modules', 'target', 'dist', '.incr', 'work', 'verdi*'],
+    \ 'file': ['*.swp', '*.swo', '*.bak', '*.pyc', '*.class', '*.o', '*.svp']
+    \ }
+let g:Lf_ShowHidden = 0
+let g:Lf_SpinSymbols = ['/', '-', '\', '|']
+let g:Lf_ShowDevIcons = 0
+let g:Lf_QuickSelectAction = 't'
+let g:Lf_PopupShowBorder = 1
+let g:Lf_PopupBorders = ["═","║","═","║","╔","╗","╝","╚"]
+
+"
+"let g:Lf_NormalMap = {
+"	\ "File":   [["<ESC>", ':exec g:Lf_py "fileExplManager.quit()"<CR>']],
+"	\ "Buffer": [["<ESC>", ':exec g:Lf_py "bufExplManager.quit()"<CR>']],
+"	\ "Mru":    [["<ESC>", ':exec g:Lf_py "mruExplManager.quit()"<CR>']],
+"	\ "Tag":    [["<ESC>", ':exec g:Lf_py "tagExplManager.quit()"<CR>']],
+"	\ "Function":    [["<ESC>", ':exec g:Lf_py "functionExplManager.quit()"<CR>']],
+"	\ "Colorscheme":    [["<ESC>", ':exec g:Lf_py "colorschemeExplManager.quit()"<CR>']],
+"	\ }
+"
+
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
