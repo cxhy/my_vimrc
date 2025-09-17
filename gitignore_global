@@ -1,0 +1,15 @@
+verdiLog
+novas*
+core.*
+*.log
+partitionlib
+csrc
+simv
+simv.daidir
+*xx*
+vc_hdrs.h
+verdi_config_file
+inter.*
+ucli.key
+help.txt
+.inter.fsdb.tbsim
