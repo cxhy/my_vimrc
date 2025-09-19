@@ -31,6 +31,9 @@ augroup relativenumber
 augroup END
 set nobackup     
 set noswapfile
+set isfname+={,}
+set includeexpr=substitute(v:fname,'{','\{\+','g')
+
 
 au! BufNewFile,BufRead *.vp  setfiletype verilog
 
