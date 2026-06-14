@@ -225,7 +225,7 @@ if exists('+termguicolors') && ($COLORTERM =~# 'truecolor\|24bit' || has('gui_ru
   set termguicolors
 endif
 
-set background=dark
+set background=light
 try
   colorscheme gruvbox
 catch /^Vim\%((\a\+)\)\=:E185/
