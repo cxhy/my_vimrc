@@ -2,6 +2,10 @@
 
 Personal Vim and Git configuration repository.
 
+## Architecture
+
+![my_vimrc architecture](docs/my_vimrc-architecture.svg)
+
 This repository manages:
 
 - `vimrc` -> installs to `~/.vimrc`
