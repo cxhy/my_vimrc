@@ -1,3 +1,6 @@
+[user]
+	name = cxhy
+	email = 979009228@qq.com
 [core]
 	pager = less -RFX
 	excludesfile = ~/.gitignore_global

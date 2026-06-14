@@ -1,12 +1,25 @@
 set nocompatible
 set backspace=indent,eol,start
 let mapleader = "\<Space>"
-set guifont=Monaco:h14
+
+if has('gui_running') && exists('+guifont')
+  if has('mac') || has('gui_macvim')
+    silent! set guifont=Monaco:h14
+  else
+    silent! set guifont=Source\ Code\ Pro\ 14
+  endif
+endif
+
 set autoread
+syntax enable
 filetype on
 filetype indent plugin on
-autocmd FileType html setlocal et sta sw=2 sts=2 
-autocmd FileType python setlocal et sta sw=4 sts=4 ts=2
+augroup my_filetypes
+  autocmd!
+  autocmd FileType html setlocal et sta sw=2 sts=2
+  autocmd FileType python setlocal et sta sw=4 sts=4 ts=2
+  autocmd BufNewFile,BufRead *.vp setfiletype verilog
+augroup END
 set encoding=utf-8
 set termencoding=utf-8
 set fileencodings=ucs-bom,utf-8,cp936,gb18030,big5,euc-jp,euc-kr
@@ -22,22 +35,19 @@ set smartindent
 set number
 set ruler
 set showcmd
-set relativenumber
 set nowrapscan
-augroup relativenumber
-    auto!
-    autocmd InsertLeave * : set relativenumber
-    autocmd InsertEnter * : set norelativenumber
-augroup END
-set nobackup     
+"augroup relativenumber
+"    auto!
+"    autocmd InsertLeave * : set relativenumber
+"    autocmd InsertEnter * : set norelativenumber
+"augroup END
 set noswapfile
 set isfname+={,}
 set includeexpr=substitute(v:fname,'{','\{\+','g')
-
-
-au! BufNewFile,BufRead *.vp  setfiletype verilog
-
-au BufReadPost * if line("'\"") > 0|if line("'\"") <= line("$")|exe("norm '\"")|else|exe "norm $"|endif|endif
+augroup my_restore_cursor
+  autocmd!
+  autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | execute 'normal! g`"' | elseif line("'\"") > line("$") | normal! G | endif
+augroup END
 set tags=./.tags;,.tags
 
 function! StarPositionSave()
@@ -54,12 +64,15 @@ endfunction
 nnoremap <silent> * :call StarPositionSave()<CR>*:call StarPositionRestore()<CR>
 
 """"""""""""""zhushi
-autocmd FileType c,cpp,java,scala，verilog,systemverilog let b:comment_leader = '// '
-autocmd FileType sh,ruby,python   let b:comment_leader = '# '
-autocmd FileType conf,fstab       let b:comment_leader = '# '
-autocmd FileType tex              let b:comment_leader = '% '
-autocmd FileType mail             let b:comment_leader = '> '
-autocmd FileType vim              let b:comment_leader = '" '
+augroup my_comment_leaders
+  autocmd!
+  autocmd FileType c,cpp,java,scala,verilog,systemverilog let b:comment_leader = '// '
+  autocmd FileType sh,ruby,python let b:comment_leader = '# '
+  autocmd FileType conf,fstab let b:comment_leader = '# '
+  autocmd FileType tex let b:comment_leader = '% '
+  autocmd FileType mail let b:comment_leader = '> '
+  autocmd FileType vim let b:comment_leader = '" '
+augroup END
 noremap <silent> <leader>cc :<C-B>silent <C-E>s/^/<C-R>=escape(b:comment_leader,'\/')<CR>/<CR>:nohlsearch<CR>
 noremap <silent> <leader>cu :<C-B>silent <C-E>s/^\V<C-R>=escape(b:comment_leader,'\/')<CR>//e<CR>:nohlsearch<CR>
 
@@ -208,8 +221,18 @@ call plug#end()
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "              gruvbox
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-colorscheme gruvbox
+if exists('+termguicolors') && ($COLORTERM =~# 'truecolor\|24bit' || has('gui_running'))
+  set termguicolors
+endif
+
 set background=dark
+try
+  colorscheme gruvbox
+catch /^Vim\%((\a\+)\)\=:E185/
+  echohl WarningMsg
+  echom 'gruvbox not found; run :PlugInstall'
+  echohl None
+endtry
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "              Easy Align
@@ -284,7 +307,7 @@ let g:templates_directory = '~/.vim/templates'
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "              auto load modified
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-function! s:UpdateFileTemplate()
+function! s:UpdateFileTemplate() abort
     let l:save_view = winsaveview()
     let l:save_cursor = getpos('.')
     let l:save_search = getreg('/')
@@ -299,7 +322,10 @@ function! s:UpdateFileTemplate()
     call setreg('/', l:save_search)
 endfunction
 
-autocmd BufWritePre *.h,*.c,*.v,*.sv,*.vh,*.svh call s:UpdateFileTemplate()
+augroup my_template_update
+  autocmd!
+  autocmd BufWritePre *.h,*.c,*.v,*.sv,*.vh,*.svh call <SID>UpdateFileTemplate()
+augroup END
 
 "function! s:UpdateFileTemplate()
 "    let l:exec_line = '1,' . min([line('$'), 10])
@@ -320,15 +346,9 @@ autocmd BufWritePre *.h,*.c,*.v,*.sv,*.vh,*.svh call s:UpdateFileTemplate()
 "backup
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set backup
-function Bkdir()
-    let $BKODIR=expand("$HOME/.vim/backup")
-    let $RUNTIMEPATH=expand("%:p:h")
-    let $BKDIR=$BKODIR.$RUNTIMEPATH
-    if !isdirectory(expand("$BKDIR"))
-        call mkdir(expand("$BKDIR"),"p",0750)
-    endif
-endfunction
-au BufWrite * call Bkdir()
-autocmd BufWritePre * let &bex = '_'.strftime("%Y%m%d_%H_%M")
-let &backupdir=expand("$HOME/.vim/backup").expand("%:p:h")
-
+set backupdir=~/.vim/backup//
+augroup my_backup
+  autocmd!
+  autocmd BufWritePre * call mkdir(expand('~/.vim/backup'), 'p', 0700)
+  autocmd BufWritePre * let &backupext = '_' . strftime('%Y%m%d_%H_%M')
+augroup END
