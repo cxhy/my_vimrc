@@ -20,3 +20,5 @@
   branch-info = !echo "Current Branch:" && git rev-parse --abbrev-ref HEAD
   commit-info = !echo "Last Commit:" && git log -1 --pretty=format:'%C(yellow)%h%C(reset) %C(blue)%an%C(reset) %C(auto)%d%C(reset) %C(green)%s%C(reset) %C(red)(%cr)%C(reset)' 
   info = !git remote-info && echo && git branch-info && echo && git commit-info
+[credential]
+	helper = store
